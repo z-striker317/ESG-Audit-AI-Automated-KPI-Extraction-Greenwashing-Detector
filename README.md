@@ -47,3 +47,31 @@ The pipeline is executed sequentially in a single Jupyter Notebook flow:
     ```CMD Terminal
     ollama pull mistral:7b-instruct
     ```
+3.  **Python Environment & Libraries:** Ensure you have Python installed, then install the necessary dependencies using pip:
+
+   ```Bash
+   pip install pandas matplotlib seaborn tqdm pydantic langchain-ollama langchain pypdf python-dotenv
+   ```
+4.  **Environment File (api_key.env):** Create a blank text file named api_key.env in the same directory as your project. Note: Since this pipeline runs entirely locally using Ollama and Mistral 7B, no API key is actually used. This file acts as a placeholder to prevent load_dotenv from throwing an error, but it is setup so users can easily outsource inference to external cloud APIs (like Gemini or OpenAI) in the future.
+
+## 🚀 Execution Steps
+1.  **Initialize:** Open your Jupyter Notebook and run Steps 1 through 3 to load the libraries, Pydantic schemas, and extraction classes.
+
+2.  **Run Pipeline:** Execute Step 4 (Execution).
+
+3.  **Input Path:** When the input box appears, type or paste the relative or local file path to your target ESG PDF (e.g., path/to/your/ESG_Report.pdf).
+
+4.  **Review Findings:** Let the progress bar finish. The notebook will automatically print the aggregated KPI dataframes and generate the visual risk profile at the bottom of the page.
+
+## 📊 Understanding the Visualizations (Auditor Guide)
+The final reporting step generates two risk assessment graphs specifically designed to aid human auditors in their review:
+
+1.  **Greenwashing Claim Frequency by Type (Bar Chart) 📉**
+This chart categorizes the types of greenwashing the AI found. One critical category to watch for is the "Lesser of Two Evils". This occurs when a claim might be truthful within a specific product category, but it risks distracting the consumer from the much greater environmental impacts of the category as a whole. A classic example is a company boasting about "organic tobacco" or "fuel-efficient private jets."
+
+2.  **Distribution of AI Confidence Scores (Histogram & Curve) 🔔**
+A Confidence Score is a probability metric (ranging from 0.0 to 1.0) that represents how certain the AI is about its own greenwashing classification.
+
+The tallest peak (the large purple block) shows where the model's certainty is most concentrated.
+
+The Red Dashed Line acts as your Auditor Warning Threshold (set at 0.8). Anything at or to the right of this line means the model is highly confident the claim is greenwashing, signaling that an auditor needs to manually review that specific page immediately.
